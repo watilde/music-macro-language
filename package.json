@@ -1,0 +1,27 @@
+{
+  "name": "music-macro-language",
+  "version": "0.0.1",
+  "description": "Music macro language parser",
+  "main": "index.js",
+  "scripts": {
+    "release": "standard-version",
+    "build": "pegjs index.pegjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/watilde/music-macro-language.git"
+  },
+  "keywords": [
+    "MML"
+  ],
+  "author": "Daijiro Wachi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/watilde/music-macro-language/issues"
+  },
+  "homepage": "https://github.com/watilde/music-macro-language#readme",
+  "devDependencies": {
+    "pegjs": "^0.10.0",
+    "standard-version": "^2.4.0"
+  }
+}
