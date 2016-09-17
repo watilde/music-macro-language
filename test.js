@@ -5,3 +5,5 @@ var fixture = fs.readFileSync('./test.ast', 'utf8')
 var mml = require('./')
 
 var ast = mml.parse(file)
+
+console.log(ast)

@@ -19,20 +19,21 @@ NextTrack = _ ";" _ {
 _ = (_WhiteSpace / _LineTerminatorSequence / _MultiLineCommentNoLineTerminator / Comment)*
 
 Command = Comment / Note / Rest / Octave / OctaveUp / OctaveDown /
-  NoteShiftAbsolute / NoteShiftRelative / OctaveReverse
+  NoteShiftAbsolute / NoteShiftRelative / OctaveReverse / Detune /
+  LFO
 
 // Interval
-Note = _ tone:[CDEFGAB] _ accidentals:[-+]* _ length:$([0-9]*) _ dots:"."* _ {
+Note = _ tone:[a-gA-G] _ accidentals:[-+]* _ length:$([0-9]*) _ dots:"."* _ {
   return {
     command: "note",
-    tone: tone,
+    tone: tone.toLowerCase(),
     accidentals: accidentals,
     length: +length,
     dots: dots
   };
 }
 
-Rest = _ "R" _ length:$([0-9]*) _ dots:"."* _ {
+Rest = _ ("r" / "R") _ length:$([0-9]*) _ dots:"."* _ {
   return {
     command: "rest",
     length: +length,
@@ -40,7 +41,7 @@ Rest = _ "R" _ length:$([0-9]*) _ dots:"."* _ {
   };
 }
 
-Octave = _ "O" _ number:$("-"? [0-9]+) _ {
+Octave = _ ("o" / "O") _ number:$("-"? [0-9]+) _ {
   if (0 > number || number > 8) {
     error("RangeError: Octave must be between 0 and 8");
   }
@@ -62,15 +63,15 @@ OctaveDown = _ ">" _ {
   };
 }
 
-NoteShiftAbsolute = _ "NS" _ number:$("-"? [0-9]+) _ {
+NoteShiftAbsolute = _ ("ns" / "NS") _ number:$("-"? [0-9]+) _ {
   return {
     command: "node_shift",
     type: "absolute",
-    number: +unmber
+    number: +number
   };
 }
 
-NoteShiftRelative = _ "@NS" _ number:$("-"? [0-9]+) _ {
+NoteShiftRelative = _ ("@ns" / "@NS") _ number:$("-"? [0-9]+) _ {
   return {
     command: "node_shift",
     type: "relative",
@@ -78,16 +79,35 @@ NoteShiftRelative = _ "@NS" _ number:$("-"? [0-9]+) _ {
   }
 }
 
-OctaveReverse = _ "#OCTAVE REVERSE" _ {
+OctaveReverse = _ ("#octave reverse" / "#OCTAVE REVERSE") _ {
   return {
     command: "octave_reverse"
   }
 }
 
-Detune = _ "@D" _ number:$("-"? [0-9]+) _ {
+Detune = _ ("@d" / "@D") _ number:$("-"? [0-9]+) _ {
   return {
     command: "detune",
     number: +number
+  }
+}
+
+LFO = _ ("@l" / "@L") _
+  depth:$([0-9]+) _ ',' _
+  width:$([0-9]+) _ ',' _
+  form:$("-"? [0-3]) _ ',' _
+  delay:$([0-9]+) _ ',' _
+  time:$([0-9]+) _ ','_
+  dest:$([0-5]) _
+{
+  return {
+    command: "lfo",
+    depth: +depth,
+    width: +width,
+    form: +form,
+    delay: +delay,
+    time: +time,
+    dest: +dest
   }
 }
 
