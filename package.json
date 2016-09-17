@@ -1,6 +1,6 @@
 {
   "name": "music-macro-language",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Music macro language parser",
   "main": "index.js",
   "scripts": {
